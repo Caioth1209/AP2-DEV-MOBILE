@@ -8,7 +8,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 
-class Pergunta3 : AppCompatActivity() {
+class Pergunta3Activity : AppCompatActivity() {
 
     private lateinit var answerRg: RadioGroup
     private lateinit var nextBtn: Button
@@ -17,7 +17,7 @@ class Pergunta3 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_pergunta2)
+        setContentView(R.layout.activity_pergunta3)
 
         backBtn = findViewById(R.id.backBtn)
         nextBtn = findViewById(R.id.nextBtn)
@@ -27,7 +27,9 @@ class Pergunta3 : AppCompatActivity() {
         pointsTv.text = "Sua pontuação: " + SharedData.totalScore;
 
         backBtn.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java);
+            SharedData.totalScore -= SharedData.lastPoints;
+            SharedData.lastPoints = 0;
+            val intent = Intent(this, Pergunta2Activity::class.java);
             startActivity(intent);
         }
 
@@ -35,22 +37,33 @@ class Pergunta3 : AppCompatActivity() {
             val selectedId = answerRg.checkedRadioButtonId
             val selectedRadioButton = findViewById<RadioButton>(selectedId)
 
-            selectedRadioButton?.let {
-                val answer = it.text.toString();
-                val intent = Intent(this, Pergunta4::class.java);
+            if (selectedId != -1) {
+                val answer = selectedRadioButton.text.toString()
+                val intent = Intent(this, Pergunta4Activity::class.java)
 
                 when (answer) {
                     "Sim" -> {
-                        SharedData.totalScore += 10;
+                        SharedData.totalScore += 10
+                        SharedData.lastPoints = 10
                     }
                     "Não" -> {
-                        SharedData.totalScore += 2;
+                        SharedData.totalScore += 2
+                        SharedData.lastPoints = 2
                     }
                 }
 
-                startActivity(intent);
+                startActivity(intent)
+            } else {
+                showErrorFragment("Por favor, selecione uma opção antes de prosseguir.")
             }
         }
-
     }
+
+    private fun showErrorFragment(errorMessage: String) {
+        val fragment = MessageFragment.newInstance(errorMessage)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .commit()
+    }
+
 }

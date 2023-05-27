@@ -13,13 +13,16 @@
         android:theme="@style/Theme.Ap2devmobile"
         tools:targetApi="31">
         <activity
-            android:name=".Pergunta4"
+            android:name=".ResultadoFormulario"
             android:exported="false" />
         <activity
-            android:name=".Pergunta3"
+            android:name=".Pergunta4Activity"
             android:exported="false" />
         <activity
-            android:name=".Pergunta2"
+            android:name=".Pergunta3Activity"
+            android:exported="false" />
+        <activity
+            android:name=".Pergunta2Activity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

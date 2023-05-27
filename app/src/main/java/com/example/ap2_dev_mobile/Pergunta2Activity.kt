@@ -6,22 +6,32 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import android.widget.Toast
-import androidx.fragment.app.FragmentManager
+import android.widget.TextView
 
-class MainActivity : AppCompatActivity() {
+class Pergunta2Activity : AppCompatActivity() {
 
     private lateinit var answerRg: RadioGroup
     private lateinit var nextBtn: Button
-    private lateinit var fragmentManager: FragmentManager
+    private lateinit var backBtn: Button
+    private lateinit var pointsTv: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_pergunta2)
 
-        answerRg = findViewById(R.id.answerRg)
+        backBtn = findViewById(R.id.backBtn)
         nextBtn = findViewById(R.id.nextBtn)
-        fragmentManager = supportFragmentManager
+        answerRg = findViewById(R.id.answerRg)
+        pointsTv = findViewById(R.id.pointsTv)
+
+        pointsTv.text = "Sua pontuação: " + SharedData.totalScore;
+
+        backBtn.setOnClickListener {
+            SharedData.totalScore -= SharedData.lastPoints;
+            SharedData.lastPoints = 0;
+            val intent = Intent(this, MainActivity::class.java);
+            startActivity(intent);
+        }
 
         nextBtn.setOnClickListener {
             val selectedId = answerRg.checkedRadioButtonId
@@ -29,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
             if (selectedId != -1) {
                 val answer = selectedRadioButton.text.toString()
-                val intent = Intent(this, Pergunta2Activity::class.java)
+                val intent = Intent(this, Pergunta3Activity::class.java)
 
                 when (answer) {
                     "Sim" -> {
@@ -47,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                 showErrorFragment("Por favor, selecione uma opção antes de prosseguir.")
             }
         }
+
     }
 
     private fun showErrorFragment(errorMessage: String) {
@@ -55,5 +66,4 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fragmentContainer, fragment)
             .commit()
     }
-
 }
